@@ -1,0 +1,27 @@
+[
+    {
+        "key": "ctrl+shift+i",
+        "command": "editor.action.showHover",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+k ctrl+i",
+        "command": "editor.action.showHover",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+d",
+        "command": "editor.action.showDefinitionPreviewHover",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "f1",
+        "command": "editor.action.showContextMenu",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+space",
+        "command": "editor.action.triggerParameterHints",
+        "when": "editorTextFocus"
+    }
+]

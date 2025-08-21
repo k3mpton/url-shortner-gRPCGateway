@@ -1,0 +1,72 @@
+{
+    "go.useLanguageServer": true,
+    "go.lintTool": "golangci-lint",
+    "go.formatTool": "goimports",
+    "go.buildOnSave": "package",
+    "go.testOnSave": false,
+    "go.vetOnSave": "package",
+    "go.coverOnSave": false,
+    "go.gocodeAutoBuild": false,
+    "go.goroot": "",
+    "go.gopath": "",
+    "go.toolsGopath": "",
+    "go.buildTags": "",
+    "go.testFlags": [
+        "-v"
+    ],
+    "go.testTimeout": "30s",
+    "go.delveConfig": {
+        "dlvLoadConfig": {
+            "followPointers": true,
+            "maxVariableRecurse": 1,
+            "maxStringLen": 512,
+            "maxArrayValues": 64,
+            "maxStructFields": -1
+        }
+    },
+    "go.lintFlags": [
+        "--fast"
+    ],
+    "go.vetFlags": [],
+    "go.coverOptions": "showCoveredCodeOnly",
+    "go.testEnvVars": {},
+    "go.testEnvFile": "${workspaceFolder}/.env",
+    "go.docsTool": "gogetdoc",
+    "go.codelens": {
+        "references": true,
+        "runtest": true,
+        "upgrade.dependency": true
+    },
+    "go.alternateTools": {},
+    "go.importsLocalPrefix": "",
+    "go.toolsEnvVars": {},
+    "go.gopath": "",
+    "go.goroot": "",
+    "go.inferGopath": true,
+    "go.buildTags": "",
+    "go.lintTool": "golangci-lint",
+    "go.lintFlags": [
+        "--fast"
+    ],
+    "go.vetFlags": [],
+    "go.coverOptions": "showCoveredCodeOnly",
+    "go.testFlags": [
+        "-v"
+    ],
+    "go.testTimeout": "30s",
+    "go.testEnvVars": {},
+    "go.testEnvFile": "${workspaceFolder}/.env",
+    "go.docsTool": "gogetdoc",
+    "go.codelens": {
+        "references": true,
+        "runtest": true,
+        "upgrade.dependency": true
+    },
+    "go.alternateTools": {},
+    "go.importsLocalPrefix": "",
+    "go.toolsEnvVars": {},
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    }
+}
