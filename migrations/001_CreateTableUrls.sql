@@ -1,9 +1,9 @@
 -- +goose Up 
-create table Urls ( 
+create table urls ( 
     url_id serial primary key,
     short varchar unique,
     original varchar unique
 ); 
 
--- +goose down 
-drop table Urls; 
+-- +goose Down 
+drop table urls; 

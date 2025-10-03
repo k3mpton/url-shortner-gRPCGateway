@@ -9,9 +9,9 @@ import (
 )
 
 // Conn устанавливает соединение с базой данных PostgreSQL
-// Использует драйвер pgx и получает строку подключения из переменной окружения CONN_DB
+// Использует драйвер pgx и получает строку подключения из переменной окружения DATABASE_URL
 func Conn() *sql.DB {
-	db, err := sql.Open("pgx", getenvfield.Get("CONN_DB"))
+	db, err := sql.Open("pgx", getenvfield.Get("DATABASE_URL"))
 	if err != nil {
 		log.Fatalf("не удалось обратиться по ссылке к бд: %v", err)
 	}

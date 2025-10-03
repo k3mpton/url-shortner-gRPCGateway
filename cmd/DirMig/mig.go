@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"strings"
 
@@ -25,7 +24,7 @@ func main() {
 	db := conndb.Conn()
 
 	direct := "./migrations"
-	fmt.Println("hrllo")
+	log.Println("hrllo")
 	switch mig {
 	case "up":
 		if err := goose.Up(db, direct); err != nil {

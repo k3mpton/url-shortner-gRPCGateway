@@ -1,0 +1,32 @@
+FROM golang:1.24-alpine AS builder
+
+RUN apk add --no-cache protoc protobuf-dev
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o gateway ./cmd/gataway
+
+# Создаем финальный образ для запуска
+FROM alpine:latest
+
+RUN apk --no-cache add ca-certificates
+
+RUN adduser -D -s /bin/sh appuser
+
+WORKDIR /root/
+
+COPY --from=builder /app/gateway .
+
+USER appuser
+
+EXPOSE 8081
+
+CMD ["./gateway"]

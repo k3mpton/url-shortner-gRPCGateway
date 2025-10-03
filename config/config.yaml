@@ -3,3 +3,6 @@ env: local
 gRpc: 
   port: 8080 
   timeout: 5m
+
+database:
+  # URL будет взят из переменной окружения DATABASE_URL

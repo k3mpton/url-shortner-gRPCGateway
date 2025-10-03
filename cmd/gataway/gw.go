@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -14,28 +15,32 @@ import (
 )
 
 func main() {
-	// gRPC-Gateway мультиплексор
+	grpcServerAddr := os.Getenv("GRPC_SERVER_ADDR")
+	fmt.Println(grpcServerAddr)
+	if grpcServerAddr == "" { // если не находим в environment (docker) то используем localhost:8080
+		grpcServerAddr = "localhost:8080" // По умолчанию для локальной разработки
+	}
+
 	gwmux := runtime.NewServeMux()
 
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
-	// Регистрируем gRPC-сервис
 	err := shortener.RegisterLinkShortenerHandlerFromEndpoint(
 		context.Background(),
 		gwmux,
-		"localhost:8080", // Адрес gRPC-сервера
+		grpcServerAddr,
 		opts,
 	)
 	if err != nil {
 		log.Fatalf("Failed to register gateway: %v", err)
 	}
 
-	// Основной мультиплексор HTTP
 	mux := http.NewServeMux()
-	mux.Handle("/v1/", gwmux) // Все /v1/... идут в gRPC-Gateway
+	mux.Handle("/v1/", gwmux)
 
-	// Обработчик для коротких ссылок (например /abc123)
-	mux.HandleFunc("/", redirectHandler)
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		redirectHandler(w, r, grpcServerAddr)
+	})
 
 	log.Println("Gateway server started on :8081")
 	if err := http.ListenAndServe(":8081", mux); err != nil {
@@ -43,18 +48,15 @@ func main() {
 	}
 }
 
-func redirectHandler(w http.ResponseWriter, r *http.Request) {
+func redirectHandler(w http.ResponseWriter, r *http.Request, grpcServerAddr string) {
 	if r.URL.Path == "/" {
-		// Обработка главной страницы (можно вернуть HTML-форму)
 		w.Write([]byte("Welcome to URL shortener! Use /v1/links to create short URLs."))
 		return
 	}
 
-	// Извлекаем короткий код из URL (например "/abc123" → "abc123")
-	shortCode := strings.TrimPrefix(r.URL.Path, "/") // Убираем ведущий слэш
+	shortCode := strings.TrimPrefix(r.URL.Path, "/")
 
-	// Здесь нужно вызвать gRPC-метод GetOriginalLink
-	conn, err := grpc.NewClient("localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient(grpcServerAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
@@ -72,8 +74,7 @@ func redirectHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Делаем редирект на оригинальный URL
 	http.Redirect(w, r, resp.Original, http.StatusFound)
 
-	fmt.Println("ALOOOOOOOOOOOOOOOOOO")
+	fmt.Println("pong")
 }

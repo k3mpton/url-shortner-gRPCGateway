@@ -1,0 +1,59 @@
+services:
+  grpc-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: grpc-server
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=${DOCKER_DATABASE_URL}
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  grpc-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    container_name: grpc-server-gateway
+    ports:
+      - "8081:8081"
+    depends_on:
+      - grpc-server
+    environment:
+      - GRPC_SERVER_ADDR=grpc-server:8080
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
