@@ -9,13 +9,8 @@ import (
 )
 
 type Config struct {
-	Env      string   `yaml:"env" env-default:"local"`
-	GRPC     Grpc     `yaml:"gRpc" env-required:"true"`
-	Database Database `yaml:"database" env-required:"true"`
-}
-
-type Database struct {
-	URL string `env:"DATABASE_URL"`
+	Env  string `yaml:"env" env-default:"local"`
+	GRPC Grpc   `yaml:"gRpc" env-required:"true"`
 }
 
 type Grpc struct {

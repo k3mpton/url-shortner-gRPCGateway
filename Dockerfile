@@ -26,7 +26,6 @@ COPY --from=builder /app/config ./config
 COPY --from=builder /app/migrations ./migrations
 
 COPY --from=builder /app/scripts/start-with-migrations.sh .
-
 RUN chmod +x start-with-migrations.sh
 
 RUN chown -R appuser:appuser /app
